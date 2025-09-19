@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Register</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body onload="init()">
+
+  <!-- ===== LOGIN PAGE ===== -->
+  <div id="loginPage" class="login-bg fullpage">
+    <div class="card login-card animated">
+      <div class="center">
+        <img src="logo.png" alt="College Logo" class="login-logo" />
+      </div>
+      <h2 class="title">Welcome Back</h2>
+      <p class="subtitle">Please login to continue</p>
+      <div class="form-group">
+        <label>Username</label>
+        <input id="loginUser" type="text" placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="password-wrap">
+          <input id="loginPass" type="password" placeholder="Enter password">
+          <button type="button" class="toggle-pass" onclick="togglePassword()">👁️</button>
+        </div>
+      </div>
+      <button class="btn btn-login" onclick="login()">Login</button>
+      <p id="loginMsg" class="login-error"></p>
+    </div>
+  </div>
+
+  <!-- ===== MAIN APP ===== -->
+  <div id="app" class="container" style="display:none">
+    <div class="card p-20">
+      <div class="grid header gap-16">
+        <div class="logo-wrap center">
+          <img src="logo.png" alt="College Logo" class="logo" />
+        </div>
+        <div>
+          <h1 class="title" style="font-size:32px;">
+            DR. V. H. DAVE HOMOEOPATHIC MEDICAL COLLEGE &amp; <br/>
+            SMT. S. I. PATEL HOMOEOPATHIC HOSPITAL
+          </h1>
+          <p class="subtitle" style="font-size:18px;">
+            Hahnemann House, Amul Dairy Road, Anand 388001
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar: Logout + Role -->
+    <div class="section card p-20 flex justify-between items-center">
+      <div>
+        Logged in as: <span id="currentUserLabel"></span>
+      </div>
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Department/Room controls -->
+    <div class="section card p-20">
+      <div class="grid controls">
+        <!-- Department -->
+        <div>
+          <div class="toolbar">
+            <label for="dept">Department</label>
+            <select id="dept"></select>
+            <button id="btnAddDept" class="btn" onclick="addOption('departments')">+ Add</button>
+            <button id="btnDelDept" class="btn btn-danger" onclick="deleteSelected('departments','dept')">Delete</button>
+          </div>
+          <div id="deptTags" class="chip-row"></div>
+        </div>
+
+        <!-- Room -->
+        <div>
+          <div class="toolbar">
+            <label for="room">Room No</label>
+            <select id="room"></select>
+            <button id="btnAddRoom" class="btn" onclick="addOption('rooms')">+ Add</button>
+            <button id="btnDelRoom" class="btn btn-danger" onclick="deleteSelected('rooms','room')">Delete</button>
+          </div>
+          <div id="roomTags" class="chip-row"></div>
+        </div>
+      </div>
+
+      <div class="toolbar section">
+        <div> Total Items: <span class="counter" id="total">0</span> </div>
+        <div class="right">
+          <button class="btn" onclick="print()">Print</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items -->
+    <div class="section card p-20">
+      <div class="toolbar">
+        <input id="newItemName" list="itemList" type="text" placeholder="Enter or choose Item Name" />
+        <datalist id="itemList"></datalist>
+        <input id="newQty" type="number" placeholder="Qty" />
+        <button class="btn btn-primary" onclick="addItem()">Add Item</button>
+        <button class="btn" onclick="exportCSV()">Export CSV</button>
+        <button class="btn" onclick="exportJSON()">Export JSON</button>
+        <button id="btnExportAll" class="btn" style="display:none" onclick="exportAllCSV()">Export All CSV</button>
+        <input class="btn" style="padding:8px" type="file" accept="application/json" onchange="importJSON(event)" />
+      </div>
+      <div id="itemTags" class="chip-row"></div>
+
+      <!-- ✅ Responsive table wrapper -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="items"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Admin-only: Manage Users -->
+    <div id="adminPanel" class="section card p-20" style="display:none">
+      <h3>Create Department User</h3>
+      <div class="toolbar">
+        <select id="deptForUser"></select>
+        <select id="roomForUser"></select>
+        <button class="btn btn-primary" onclick="createDeptUser()">Generate User</button>
+      </div>
+      <div id="usersList" class="chip-row"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
